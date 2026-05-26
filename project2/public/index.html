@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ashok Mess — Uppiliyapuram</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--surface:#111;--s2:#181818;--border:#252525;--b2:#333;--gold:#f5a623;--or:#e8572a;--text:#f2ede8;--muted:#7a7065;--m2:#aaa09a;--green:#4caf93;--gbg:#0d1f1a;--red:#e74c3c;}
+*{box-sizing:border-box;margin:0;padding:0;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:3px;}
+body{background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(245,166,35,.06),transparent 60%),radial-gradient(ellipse 60% 40% at 80% 90%,rgba(232,87,42,.05),transparent 50%);pointer-events:none;z-index:0;}
+
+/* ── STATUS BAR ── */
+#status-bar{position:fixed;top:0;left:0;right:0;z-index:999;padding:.3rem 1rem;font-size:.72rem;font-weight:600;text-align:center;transition:all .3s;display:none;}
+#status-bar.online{background:#0d1f1a;color:var(--green);border-bottom:1px solid rgba(76,175,147,.3);display:block;}
+#status-bar.offline{background:#1f0d0d;color:var(--red);border-bottom:1px solid rgba(231,76,60,.3);display:block;}
+#status-bar.syncing{background:rgba(245,166,35,.1);color:var(--gold);border-bottom:1px solid rgba(245,166,35,.3);display:block;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.5rem;background:rgba(8,8,8,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;gap:.5rem;flex-wrap:wrap;margin-top:0;}
+nav.with-bar{margin-top:28px;}
+nav::after{content:"";position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,166,35,.4),transparent);}
+.nb{display:flex;align-items:center;gap:.7rem;flex-shrink:0;}
+.lb{width:50px;height:50px;border-radius:10px;background:#fff;border:2px solid rgba(245,166,35,.4);box-shadow:0 0 16px rgba(245,166,35,.2);flex-shrink:0;overflow:hidden;padding:2px;}
+.lb img{width:100%;height:100%;object-fit:contain;}
+.bt h1{font-family:"Bebas Neue",cursive;font-size:1.5rem;letter-spacing:3px;background:linear-gradient(135deg,var(--text) 40%,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+.bt p{font-size:.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.nl{display:flex;gap:.25rem;flex-wrap:wrap;}
+.nl button{background:none;border:1px solid transparent;color:var(--m2);padding:.4rem .85rem;border-radius:7px;cursor:pointer;font-size:.78rem;font-family:"DM Sans",sans-serif;font-weight:500;transition:all .2s;}
+.nl button:hover{color:var(--text);border-color:var(--b2);}
+.nl button.active{background:linear-gradient(135deg,rgba(245,166,35,.15),rgba(232,87,42,.1));border-color:rgba(245,166,35,.35);color:var(--gold);}
+#clk{font-size:.72rem;color:var(--muted);flex-shrink:0;}
+.page{display:none;padding:1.5rem;max-width:1300px;margin:0 auto;position:relative;z-index:1;}
+.page.active{display:block;animation:fu .35s cubic-bezier(.16,1,.3,1);}
+@keyframes fu{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* LOADING SPINNER */
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(245,166,35,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-overlay{position:absolute;inset:0;background:rgba(8,8,8,.7);z-index:10;display:flex;align-items:center;justify-content:center;border-radius:16px;backdrop-filter:blur(4px);}
+.loading-overlay p{color:var(--gold);font-family:"Bebas Neue",cursive;letter-spacing:2px;font-size:1.2rem;}
+
+.dh{text-align:center;padding:2rem 1rem 2.5rem;position:relative;}
+.dh::before{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:250px;background:radial-gradient(ellipse,rgba(245,166,35,.07),transparent 70%);pointer-events:none;}
+.ey{display:inline-flex;align-items:center;gap:.5rem;font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);padding:.28rem .85rem;border-radius:50px;margin-bottom:.7rem;}
+.ey::before,.ey::after{content:"✦";font-size:.45rem;}
+.dh h2{font-family:"Bebas Neue",cursive;font-size:clamp(2.5rem,7vw,5.5rem);letter-spacing:5px;line-height:.95;background:linear-gradient(180deg,var(--text),rgba(242,237,232,.4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.dh h2 span{-webkit-text-fill-color:var(--gold);}
+.ds{color:var(--muted);font-size:.76rem;letter-spacing:3px;text-transform:uppercase;margin-top:.6rem;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.ds::before,.ds::after{content:"";width:35px;height:1px;background:var(--b2);display:block;}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:900px){.sg{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.sg{grid-template-columns:1fr;}}
+.sc{background:linear-gradient(145deg,var(--surface),#0d0d0d);border:1px solid var(--border);border-radius:20px;padding:1.5rem;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s;}
+.sc::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,166,35,.5),transparent);}
+.sc:hover{transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,.5);}
+.si{font-size:1.8rem;margin-bottom:.6rem;display:block;}
+.sv{font-family:"Bebas Neue",cursive;font-size:2rem;letter-spacing:1px;color:var(--text);line-height:1;}
+.sl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:.3rem;}
+.st{font-size:.72rem;color:var(--green);margin-top:.4rem;}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:700px){.cg{grid-template-columns:1fr;}}
+.cc{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1.5rem;}
+.ct{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1.2rem;}
+.bc{display:flex;align-items:flex-end;gap:.5rem;height:100px;}
+.bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem;}
+.bar{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--gold),var(--or));min-height:4px;}
+.bl{font-size:.6rem;color:var(--muted);text-align:center;}
+.bv{font-size:.62rem;color:var(--gold);font-weight:600;min-height:.75rem;}
+.tir{display:flex;align-items:center;gap:.8rem;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.tir:last-child{border-bottom:none;}
+.trk{font-family:"Bebas Neue",cursive;font-size:1.2rem;color:var(--muted);width:24px;text-align:center;}
+.tnm{flex:1;font-size:.88rem;}
+.tvl{font-family:"Bebas Neue",cursive;font-size:1.1rem;color:var(--gold);}
+.tbw{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.tb{height:100%;background:linear-gradient(90deg,var(--gold),var(--or));border-radius:3px;}
+.da{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.5rem;}
+@media(max-width:700px){.da{grid-template-columns:1fr 1fr;}}
+.db{padding:1rem;border-radius:14px;border:1px solid var(--border);background:var(--s2);color:var(--text);font-family:"Bebas Neue",cursive;font-size:1.1rem;letter-spacing:2px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;position:relative;overflow:hidden;}
+.db::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,166,35,.08),transparent);opacity:0;transition:opacity .2s;}
+.db:hover::before{opacity:1;}
+.db:hover{border-color:rgba(245,166,35,.35);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.4);color:var(--gold);}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.sh h3{font-family:"Bebas Neue",cursive;font-size:1.4rem;letter-spacing:2px;background:linear-gradient(135deg,var(--text),rgba(242,237,232,.5));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ph{margin-bottom:1.5rem;}
+.ph h2{font-family:"Bebas Neue",cursive;font-size:2.4rem;letter-spacing:4px;background:linear-gradient(135deg,var(--text),rgba(242,237,232,.45));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ph p{font-size:.78rem;color:var(--muted);}
+.fi{display:flex;gap:.7rem;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.8rem 1rem;margin-bottom:1.2rem;}
+.fi input,.fi select{background:var(--s2);border:1px solid var(--border);color:var(--text);padding:.55rem .9rem;border-radius:9px;font-size:.85rem;font-family:"DM Sans",sans-serif;outline:none;transition:border .2s;flex:1;min-width:120px;}
+.fi input:focus,.fi select:focus{border-color:rgba(245,166,35,.5);}
+.fi input[type=date]{color-scheme:dark;}
+.tw{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;position:relative;}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:linear-gradient(90deg,#131313,#0f0f0f);border-bottom:1px solid var(--border);}
+th{text-align:left;padding:.85rem 1rem;font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:600;cursor:pointer;user-select:none;transition:color .2s;}
+th:hover{color:var(--gold);}
+td{padding:.85rem 1rem;border-bottom:1px solid rgba(255,255,255,.025);font-size:.88rem;}
+tbody tr{transition:background .15s;}
+tbody tr:hover{background:rgba(255,255,255,.025);}
+tbody tr:last-child td{border-bottom:none;}
+.bn{font-family:"Bebas Neue",cursive;font-size:1.05rem;color:var(--m2);letter-spacing:1px;}
+.pc{color:var(--m2);font-size:.82rem;font-family:monospace;}
+.ac{color:var(--muted);font-size:.82rem;}
+.dc{color:var(--m2);font-size:.8rem;}
+.tc{display:inline-flex;background:var(--gbg);color:var(--green);border:1px solid rgba(76,175,147,.25);padding:.25rem .7rem;border-radius:7px;font-size:.82rem;font-weight:600;}
+.ab{background:var(--s2);border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:.85rem;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;}
+.ab:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,.08);}
+.ab.dl:hover{border-color:var(--or);color:var(--or);background:rgba(232,87,42,.08);}
+.tf{padding:.8rem 1rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--muted);}
+.pg{display:flex;gap:.3rem;flex-wrap:wrap;}
+.pgb{background:var(--s2);border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:.8rem;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.pgb:hover,.pgb.active{background:rgba(245,166,35,.12);border-color:rgba(245,166,35,.3);color:var(--gold);}
+.bl2{display:grid;grid-template-columns:1.15fr 1fr;gap:1.2rem;align-items:start;}
+@media(max-width:950px){.bl2{grid-template-columns:1fr;}}
+.bf{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:1.8rem;position:relative;overflow:hidden;}
+.bf::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--or),var(--gold),var(--or));background-size:200% 100%;animation:sh2 3s linear infinite;}
+@keyframes sh2{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.fs{margin-bottom:1.3rem;}
+.sl2{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:.8rem;font-weight:600;display:flex;align-items:center;gap:.5rem;}
+.sl2::after{content:"";flex:1;height:1px;background:var(--border);}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+.fg4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.7rem;}
+@media(max-width:600px){.fg4{grid-template-columns:1fr 1fr;}}
+.fld{display:flex;flex-direction:column;gap:.3rem;}
+.fld label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:500;}
+.fld input,.fld select,.fld textarea{background:var(--s2);border:1px solid var(--border);color:var(--text);padding:.65rem .9rem;border-radius:10px;font-size:.88rem;font-family:"DM Sans",sans-serif;outline:none;transition:border .2s,box-shadow .2s;}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:rgba(245,166,35,.5);box-shadow:0 0 0 3px rgba(245,166,35,.06);}
+.fld input[type=date],.fld input[type=time]{color-scheme:dark;}
+.fld select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:1.8rem;}
+.fld textarea{resize:vertical;min-height:55px;}
+.ite{background:var(--s2);border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:1.2rem;}
+.ir{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:.5rem;align-items:end;margin-bottom:.6rem;}
+@media(max-width:600px){.ir{grid-template-columns:1fr 1fr;}}
+.aib{background:none;border:1px dashed var(--b2);color:var(--muted);padding:.5rem 1rem;border-radius:10px;cursor:pointer;font-size:.8rem;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem;font-family:"DM Sans",sans-serif;}
+.aib:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,.05);}
+.ri{background:none;border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:.8rem;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ri:hover{border-color:var(--or);color:var(--or);}
+.bfo{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid var(--border);}
+.ltl{font-size:.67rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.ltv{font-family:"Bebas Neue",cursive;font-size:1.9rem;letter-spacing:2px;color:var(--gold);line-height:1;}
+.svb{background:linear-gradient(135deg,var(--gold),var(--or));border:none;color:#000;padding:.8rem 1.8rem;border-radius:11px;font-family:"Bebas Neue",cursive;font-size:1.1rem;letter-spacing:2px;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:.5rem;box-shadow:0 4px 18px rgba(245,166,35,.28);position:relative;overflow:hidden;}
+.svb::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);}
+.svb:hover{transform:translateY(-2px);box-shadow:0 7px 25px rgba(245,166,35,.38);}
+.svb:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.ip{background:var(--surface);border:1px solid var(--border);border-radius:22px;overflow:hidden;position:sticky;top:85px;}
+.iph{padding:1rem 1.4rem;background:linear-gradient(90deg,#0f0f0f,#121212);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.iph h3{font-family:"Bebas Neue",cursive;font-size:1rem;letter-spacing:2px;color:var(--m2);}
+.iac{display:flex;gap:.4rem;}
+.iab{background:none;border:1px solid var(--border);color:var(--muted);padding:.3rem .7rem;border-radius:7px;cursor:pointer;font-size:.75rem;transition:all .2s;font-family:"DM Sans",sans-serif;}
+.iab:hover{border-color:var(--gold);color:var(--gold);}
+.idot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 7px var(--gold);animation:pd 2s infinite;}
+@keyframes pd{0%,100%{opacity:1}50%{opacity:.3}}
+.ib{padding:1.5rem;max-height:72vh;overflow-y:auto;}
+.ibn{font-family:"Bebas Neue",cursive;font-size:1.6rem;letter-spacing:3px;color:var(--gold);}
+.ibs{font-size:.7rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.icu{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;font-size:.78rem;margin-bottom:1rem;}
+.icl{font-size:.63rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
+.icv{color:var(--text);font-weight:500;}
+.it2{width:100%;border-collapse:collapse;margin-bottom:1rem;}
+.it2 th{padding:.5rem .6rem;font-size:.63rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border);text-align:left;}
+.it2 td{padding:.5rem .6rem;font-size:.8rem;border-bottom:1px solid rgba(255,255,255,.025);}
+.ito{border-top:1px solid var(--border);padding-top:.8rem;}
+.irow{display:flex;justify-content:space-between;font-size:.82rem;padding:.2rem 0;color:var(--m2);}
+.irow.grand{font-family:"Bebas Neue",cursive;font-size:1.5rem;letter-spacing:1px;color:var(--gold);padding-top:.5rem;border-top:1px solid var(--border);margin-top:.25rem;}
+.ifn{text-align:center;margin-top:1.2rem;padding-top:.8rem;border-top:1px dashed var(--border);font-size:.68rem;color:var(--muted);}
+.rb{background:none;border:1px solid rgba(245,166,35,.35);color:var(--gold);padding:.5rem 1rem;border-radius:9px;cursor:pointer;font-size:.82rem;font-family:"DM Sans",sans-serif;transition:all .2s;}
+.rb:hover{background:rgba(245,166,35,.08);}
+.drf{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem;}
+.drf input{background:var(--s2);border:1px solid var(--border);color:var(--text);padding:.55rem .9rem;border-radius:9px;font-size:.82rem;font-family:"DM Sans",sans-serif;outline:none;}
+.drf input:focus{border-color:rgba(245,166,35,.5);}
+.drf input[type=date]{color-scheme:dark;}
+.rpg{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:700px){.rpg{grid-template-columns:1fr;}}
+.rpc{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1.5rem;}
+.rpc h3{font-family:"Bebas Neue",cursive;font-size:1.2rem;letter-spacing:2px;color:var(--m2);margin-bottom:1rem;}
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.6rem;margin-bottom:1rem;}
+.mc{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:.55rem .8rem;font-size:.82rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
+.mcd{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;padding:0;transition:color .15s;}
+.mcd:hover{color:var(--red);}
+.amr{display:flex;gap:.6rem;}
+.ami{flex:1;background:var(--s2);border:1px solid var(--border);color:var(--text);padding:.65rem .9rem;border-radius:10px;font-size:.88rem;font-family:"DM Sans",sans-serif;outline:none;}
+.ami:focus{border-color:rgba(245,166,35,.5);}
+.amb{background:linear-gradient(135deg,var(--gold),var(--or));border:none;color:#000;padding:.65rem 1.2rem;border-radius:10px;font-weight:600;cursor:pointer;font-size:.85rem;white-space:nowrap;}
+.stg{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:700px){.stg{grid-template-columns:1fr;}}
+.stc{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1.5rem;}
+.stc h3{font-family:"Bebas Neue",cursive;font-size:1.1rem;letter-spacing:2px;color:var(--m2);margin-bottom:1.2rem;}
+.tr2{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.88rem;}
+.tr2:last-child{border-bottom:none;}
+.tg{position:relative;width:42px;height:22px;cursor:pointer;flex-shrink:0;}
+.tg input{opacity:0;width:0;height:0;position:absolute;}
+.tgs{position:absolute;inset:0;background:#2a2a2a;border-radius:22px;transition:background .2s;}
+.tgs::before{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#666;bottom:3px;left:3px;transition:transform .2s,background .2s;}
+.tg input:checked+.tgs{background:rgba(245,166,35,.25);}
+.tg input:checked+.tgs::before{transform:translateX(20px);background:var(--gold);}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem;}
+.mo.open{display:flex;}
+.md{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:2rem;max-width:580px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:fu .3s;}
+.mc2{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;}
+.mc2:hover{color:var(--text);}
+.md h3{font-family:"Bebas Neue",cursive;font-size:1.6rem;letter-spacing:3px;margin-bottom:1.5rem;}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#0d1f1a;border:1px solid rgba(76,175,147,.4);color:var(--green);padding:.9rem 1.3rem;border-radius:13px;font-weight:600;font-size:.85rem;transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.16,1,.3,1);z-index:999;display:flex;align-items:center;gap:.5rem;box-shadow:0 8px 28px rgba(0,0,0,.5);max-width:320px;}
+.toast.err{background:#1f0d0d;border-color:rgba(231,76,60,.4);color:var(--red);}
+.toast.show{transform:translateY(0);opacity:1;}
+.es{text-align:center;padding:2.5rem 1rem;color:var(--muted);}
+.es .ei{font-size:2.5rem;margin-bottom:.8rem;display:block;}
+.es p{font-size:.88rem;margin-bottom:1rem;}
+.es button{background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);color:var(--gold);padding:.5rem 1.2rem;border-radius:10px;cursor:pointer;font-size:.82rem;}
+.hl{background:rgba(245,166,35,.25);border-radius:3px;padding:0 2px;}
+.sync-badge{font-size:.68rem;color:var(--gold);background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);padding:.15rem .5rem;border-radius:4px;margin-left:.4rem;vertical-align:middle;}
+@media print{
+  #status-bar,.nl,.iac,nav,.bf{display:none!important;}
+  body{background:#fff!important;color:#000!important;}
+  .page{display:none!important;}
+  #billing{display:block!important;}
+  #inv-prev{display:block!important;}
+  .ip{position:static!important;border:none!important;background:#fff!important;}
+  .ib{color:#000!important;max-height:none!important;}
+  .ibn{color:#c8a000!important;}
+  .irow.grand{color:#c8a000!important;}
+}
+@media(max-width:600px){#clk{display:none;}.page{padding:1rem;}}
+</style>
+</head>
+<body>
+
+
+
+<nav id="main-nav">
+  <div class="nb">
+    <div class="lb">
+     <img src="logo.png" alt="Ashok Mess Logo">
+    </div>
+    <div class="bt"><h1>Ashok Mess</h1><p>Uppiliyapuram</p></div>
+  </div>
+  <div class="nl">
+    <button class="active" onclick="sp('dashboard',this)">🏠 Dashboard</button>
+    <button onclick="sp('history',this)">📋 Listing</button>
+    <button onclick="sp('billing',this)">🧾 New Bill</button>
+    <button onclick="sp('reports',this)">📊 Reports</button>
+    <button onclick="sp('menu',this)">🍽️ Menu</button>
+    <button onclick="sp('settings',this)">⚙️ Settings</button>
+  </div>
+  <div id="clk"></div>
+</nav>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="page active">
+  <div class="dh">
+    <div class="ey">Live Overview</div>
+    <h2>Ashok <span>Mess</span></h2>
+    <div class="ds">Uppiliyapuram · Tamil Nadu</div>
+  </div>
+  <div class="sg">
+    <div class="sc"><span class="si">📦</span><div class="sv" id="d-ord">—</div><div class="sl">Orders This Month</div><div class="st" id="d-trend">—</div></div>
+    <div class="sc"><span class="si">💰</span><div class="sv" id="d-rev">—</div><div class="sl">Revenue This Month</div><div class="st" id="d-avg">—</div></div>
+    <div class="sc"><span class="si">📅</span><div class="sv" id="d-tod">—</div><div class="sl">Today's Orders</div><div class="st" id="d-todrev">—</div></div>
+    <div class="sc"><span class="si">🏆</span><div class="sv" id="d-top" style="font-size:1rem;letter-spacing:0">—</div><div class="sl">Top Customer</div><div class="st" id="d-topamt"></div></div>
+  </div>
+  <div class="cg">
+    <div class="cc"><div class="ct">Last 7 Days — Revenue</div><div class="bc" id="bar7"><div class="spin"></div></div></div>
+    <div class="cc"><div class="ct">Top Menu Items</div><div id="topitems"><div class="spin"></div></div></div>
+  </div>
+  <div class="sh"><h3>Quick Actions</h3></div>
+  <div class="da">
+    <button class="db" onclick="sp('billing',qs()[2])">🧾 New Bill</button>
+    <button class="db" onclick="sp('history',qs()[1])">📋 View Bills</button>
+    <button class="db" onclick="sp('reports',qs()[3])">📊 Reports</button>
+    <button class="db" onclick="sp('menu',qs()[4])">🍽️ Manage Menu</button>
+  </div>
+  <div class="sh" style="margin-top:1.2rem"><h3>Recent Bills</h3><button class="rb" onclick="sp('history',qs()[1])">View All →</button></div>
+  <div class="tw"><table><thead><tr><th>Bill No</th><th>Name</th><th>Date</th><th>Total</th><th>Action</th></tr></thead><tbody id="rec-tbl"><tr><td colspan="5"><div class="es"><span class="spin"></span> Loading…</div></td></tr></tbody></table></div>
+</div>
+
+<!-- HISTORY -->
+<div id="history" class="page">
+  <div class="ph"><h2>History <span class="sync-badge" id="hist-sync">↑↓ Synced</span></h2><p>All billing records — stored in server database</p></div>
+  <div class="fi">
+    <input type="date" id="fd" onchange="loadHistory()">
+    <input type="text" id="fn" placeholder="🔍 Search name or address…" oninput="loadHistory()">
+    <select id="fs" onchange="loadHistory()">
+      <option value="newest">Newest First</option>
+      <option value="oldest">Oldest First</option>
+      <option value="highest">Highest Amount</option>
+      <option value="lowest">Lowest Amount</option>
+    </select>
+    <button class="rb" onclick="clearFilters()">Clear</button>
+    <button class="rb" onclick="window.location='/api/export/csv'">⬇ Export CSV</button>
+  </div>
+  <div class="tw" style="position:relative">
+    <div id="hist-loading" class="loading-overlay" style="display:none"><p><span class="spin"></span> Loading…</p></div>
+    <table><thead><tr>
+      <th>Bill No</th><th>Name</th><th>Phone</th><th>Address</th><th>Date</th><th>Total</th><th>Action</th>
+    </tr></thead><tbody id="bills-tbl"></tbody></table>
+    <div class="tf">
+      <span id="tbl-cnt">0 records</span>
+      <div class="pg" id="pgn"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BILLING -->
+<div id="billing" class="page">
+  <div class="ph"><h2>New Bill</h2><p>Create invoice — auto-saved to server database</p></div>
+  <div class="bl2">
+    <div class="bf">
+      <div class="fs">
+        <div class="sl2">Customer Info</div>
+        <div class="fg" style="margin-bottom:.7rem">
+          <div class="fld"><label>Name *</label><input type="text" id="bn" placeholder="Customer name…" list="csugg"><datalist id="csugg"></datalist></div>
+          <div class="fld"><label>Phone</label><input type="text" id="bph" placeholder="Phone number…"></div>
+        </div>
+        <div class="fg">
+          <div class="fld"><label>Address</label><input type="text" id="bad" placeholder="Address…"></div>
+          <div class="fld"><label>Ship To</label><input type="text" id="bsh" placeholder="Delivery address…"></div>
+        </div>
+      </div>
+      <div class="fs">
+        <div class="sl2">Order Details</div>
+        <div class="fg4">
+          <div class="fld"><label>Date</label><input type="date" id="bdt"></div>
+          <div class="fld"><label>Time</label><input type="time" id="btm"></div>
+          <div class="fld"><label>Advance ₹</label><input type="number" id="bav" value="0" min="0" oninput="updPrev()"></div>
+          <div class="fld"><label>Discount ₹</label><input type="number" id="bdi" value="0" min="0" oninput="updPrev()"></div>
+        </div>
+      </div>
+      <div class="fs">
+        <div class="sl2">Items</div>
+        <div class="ite"><div id="ilist"></div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem">
+            <button class="aib" onclick="addItem()">＋ Add Item</button>
+            <button class="aib" onclick="clearItems()">🗑 Clear</button>
+          </div>
+        </div>
+      </div>
+      <div class="fs">
+        <div class="sl2">Notes</div>
+        <div class="fld"><textarea id="bnt" placeholder="Special notes…" oninput="updPrev()"></textarea></div>
+      </div>
+      <div class="bfo">
+        <div><div class="ltl">Total Payable</div><div class="ltv" id="ltv">₹0</div></div>
+        <div style="display:flex;gap:.6rem">
+          <button class="iab" onclick="clrForm()">Clear</button>
+          <button class="svb" id="save-btn" onclick="saveBill()">💾 Save Bill</button>
+        </div>
+      </div>
+    </div>
+    <div class="ip">
+      <div class="iph">
+        <div style="display:flex;align-items:center;gap:.6rem"><div class="idot"></div><h3>Preview Invoice</h3></div>
+        <div class="iac">
+          <button class="iab" onclick="window.print()">🖨 Print</button>
+          <button class="iab" onclick="shareWA()">📱 WhatsApp</button>
+        </div>
+      </div>
+      <div class="ib" id="inv-prev"><div class="es"><span class="ei">🧾</span><p>Fill the form to preview</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORTS -->
+<div id="reports" class="page">
+  <div class="ph"><h2>Reports</h2><p>Analytics & insights from server data</p></div>
+  <div class="drf">
+    <input type="date" id="rf" onchange="bldRpt()">
+    <input type="date" id="rt" onchange="bldRpt()">
+    <button class="rb" onclick="setRange('week')">This Week</button>
+    <button class="rb" onclick="setRange('month')">This Month</button>
+    <button class="rb" onclick="setRange('all')">All Time</button>
+    <button class="rb" onclick="window.location='/api/export/csv'">⬇ Export CSV</button>
+  </div>
+  <div class="sg" style="margin-bottom:1.2rem">
+    <div class="sc"><span class="si">📦</span><div class="sv" id="r-ord">—</div><div class="sl">Total Orders</div></div>
+    <div class="sc"><span class="si">💰</span><div class="sv" id="r-rev">—</div><div class="sl">Total Revenue</div></div>
+    <div class="sc"><span class="si">📈</span><div class="sv" id="r-avg">—</div><div class="sl">Avg Bill Value</div></div>
+    <div class="sc"><span class="si">🚀</span><div class="sv" id="r-max">—</div><div class="sl">Highest Bill</div></div>
+  </div>
+  <div class="rpg">
+    <div class="rpc"><h3>Top Customers</h3><div id="r-cust"></div></div>
+    <div class="rpc"><h3>Top Menu Items</h3><div id="r-menu"></div></div>
+    <div class="rpc"><h3>Daily Revenue (Last 14 Days)</h3><div class="bc" id="r-bar" style="height:120px"></div></div>
+    <div class="rpc"><h3>Summary</h3><div id="r-sum"></div></div>
+  </div>
+</div>
+
+<!-- MENU -->
+<div id="menu" class="page">
+  <div class="ph"><h2>Menu Manager</h2><p>Synced with server — changes reflect everywhere instantly</p></div>
+  <div class="stc" style="margin-bottom:1rem">
+    <h3>Add New Item</h3>
+    <div class="amr">
+      <input class="ami" id="nmi" placeholder="Type new item name…" onkeydown="if(event.key==='Enter')addMI()">
+      <button class="amb" onclick="addMI()">＋ Add</button>
+    </div>
+  </div>
+  <div class="stc">
+    <h3>Menu Items (<span id="mcnt">0</span>)</h3>
+    <div class="mg" id="mgd"></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="page">
+  <div class="ph"><h2>Settings</h2><p>Saved to server — shared across all devices</p></div>
+  <div class="stg">
+    <div class="stc">
+      <h3>Business Info</h3>
+      <div class="fld" style="margin-bottom:.7rem"><label>Business Name</label><input type="text" id="s-biz" value="Ashok Mess" oninput="saveSt()"></div>
+      <div class="fld" style="margin-bottom:.7rem"><label>Location</label><input type="text" id="s-loc" value="Uppiliyapuram" oninput="saveSt()"></div>
+      <div class="fld" style="margin-bottom:.7rem"><label>Phone</label><input type="text" id="s-phn" placeholder="Business phone…" oninput="saveSt()"></div>
+      <div class="fld"><label>Invoice Footer Note</label><input type="text" id="s-ftr" value="Thank you for your order!" oninput="saveSt()"></div>
+    </div>
+    <div class="stc">
+      <h3>Preferences</h3>
+      <div class="tr2"><span>Auto-fill today's date</span><label class="tg"><input type="checkbox" id="s-ad" checked onchange="saveSt()"><span class="tgs"></span></label></div>
+      <div class="tr2"><span>Show invoice preview</span><label class="tg"><input type="checkbox" id="s-pv" checked onchange="saveSt()"><span class="tgs"></span></label></div>
+      <div class="tr2"><span>Confirm before delete</span><label class="tg"><input type="checkbox" id="s-cf" checked onchange="saveSt()"><span class="tgs"></span></label></div>
+      <div class="tr2"><span>Sound on save</span><label class="tg"><input type="checkbox" id="s-sn" onchange="saveSt()"><span class="tgs"></span></label></div>
+    </div>
+    <div class="stc">
+      <h3>Data Management</h3>
+      <div style="display:flex;flex-direction:column;gap:.7rem">
+        <button class="rb" style="text-align:left" onclick="window.location='/api/export/csv'">⬇ Export Bills (CSV)</button>
+        <button class="rb" style="text-align:left" onclick="backup()">💾 Backup Data (JSON)</button>
+        <button class="rb" style="text-align:left" onclick="document.getElementById('rfl').click()">📁 Restore Backup</button>
+        <input type="file" id="rfl" style="display:none" accept=".json" onchange="restore(this)">
+        <button class="rb" style="text-align:left;color:var(--red);border-color:rgba(231,76,60,.35)" onclick="clearAll()">🗑 Clear All Data</button>
+      </div>
+    </div>
+    <div class="stc">
+      <h3>About</h3>
+      <div style="font-size:.85rem;color:var(--muted);line-height:1.8">
+        <div><strong style="color:var(--text)">Ashok Mess Manager</strong></div>
+        <div>Version 3.0 — Full Stack (Backend Connected)</div>
+        <div style="margin-top:.8rem;font-size:.78rem">Data stored in <strong style="color:var(--gold)">server database</strong>. Accessible from any device on same network.</div>
+        <div style="margin-top:.5rem;color:var(--gold);font-size:.78rem">Total Bills Saved: <span id="abt">—</span></div>
+        <div style="margin-top:.3rem;color:var(--green);font-size:.78rem">Server: <span id="srv-status">Checking…</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mo" id="vmod">
+  <div class="md">
+    <button class="mc2" onclick="closeMo()">✕</button>
+    <div id="mod-cnt"></div>
+    <div style="display:flex;gap:.6rem;margin-top:1.5rem;flex-wrap:wrap">
+      <button class="svb" style="font-size:.9rem;padding:.65rem 1.2rem" onclick="window.print()">🖨 Print</button>
+      <button class="iab" style="padding:.65rem 1.2rem" onclick="shareModalWA()">📱 WhatsApp</button>
+      <button class="iab" style="padding:.65rem 1.2rem" onclick="closeMo()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  CONFIG — points to the Express backend
+// ══════════════════════════════════════════════════════════════
+const API = ''; // empty = same origin (server serves both frontend + API)
+
+// ══════════════════════════════════════════════════════════════
+//  API HELPERS
+// ══════════════════════════════════════════════════════════════
+async function api(method, path, body) {
+  try {
+    setStatus('syncing');
+    const res = await fetch(API + path, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Server error');
+    setStatus('online');
+    return data;
+  } catch (e) {
+    setStatus('offline');
+    throw e;
+  }
+}
+const GET    = (path)        => api('GET',    path);
+const POST   = (path, body)  => api('POST',   path, body);
+const PUT    = (path, body)  => api('PUT',    path, body);
+const DEL    = (path)        => api('DELETE', path);
+
+// Status bar
+function setStatus(s) {}
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let menuItems = [];
+let ST = {};
+let items = [];         // current bill line items
+let curHistPage = 1;
+let histTotal = 0;
+let modBill = null;
+const LIMIT = 10;
+
+// ══════════════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════════════
+function qs() { return document.querySelectorAll('.nl button'); }
+function gv(el) { return document.getElementById(el); }
+function fmt(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+
+// Clock
+setInterval(() => {
+  const n = new Date();
+  const el = gv('clk');
+  if (el) el.textContent = n.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) + ' ' + n.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+}, 1000);
+
+// Toast
+let toastTimer;
+function toast(msg, type) {
+  const t = gv('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'err' ? ' err' : '');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// Navigation
+function sp(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nl button').forEach(b => b.classList.remove('active'));
+  gv(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'dashboard') bldDash();
+  if (id === 'history')   { curHistPage = 1; loadHistory(); }
+  if (id === 'billing')   initBill();
+  if (id === 'reports')   bldRpt();
+  if (id === 'menu')      loadMenu();
+  if (id === 'settings')  loadSettings();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════════════
+async function bldDash() {
+  try {
+    const data = await GET('/api/dashboard');
+    const { stats, chart7Days, topItems, recentBills } = data;
+
+    gv('d-ord').textContent = stats.monthOrders;
+    gv('d-rev').textContent = fmt(stats.monthRevenue);
+    gv('d-avg').textContent = 'Avg ' + fmt(stats.monthAvg);
+    gv('d-tod').textContent = stats.todayOrders;
+    gv('d-todrev').textContent = fmt(stats.todayRevenue) + ' today';
+    gv('d-top').textContent = stats.topCustomer ? stats.topCustomer.name : '—';
+    gv('d-topamt').textContent = stats.topCustomer ? fmt(stats.topCustomer.amount) : '';
+
+    // Trend
+    const te = gv('d-trend');
+    if (stats.trend !== null) {
+      te.textContent = (stats.trend >= 0 ? '▲' : '▼') + Math.abs(stats.trend) + '% vs last month';
+      te.style.color = stats.trend >= 0 ? 'var(--green)' : 'var(--red)';
+    } else { te.textContent = 'First month!'; }
+
+    // 7-day bar
+    const mx = Math.max(...chart7Days.map(d => d.revenue)) || 1;
+    gv('bar7').innerHTML = chart7Days.map(d =>
+      `<div class="bw"><div class="bv">${d.revenue > 0 ? '₹' + (d.revenue/1000).toFixed(0) + 'k' : ''}</div>` +
+      `<div class="bar" style="height:${Math.max((d.revenue/mx)*90, 4)}px"></div>` +
+      `<div class="bl">${d.label}</div></div>`
+    ).join('');
+
+    // Top items
+    const mxI = topItems[0] ? topItems[0].qty : 1;
+    gv('topitems').innerHTML = topItems.length
+      ? topItems.map((it, i) =>
+          `<div class="tir"><div class="trk">${i+1}</div><div class="tnm">${it.name}</div>` +
+          `<div class="tbw"><div class="tb" style="width:${(it.qty/mxI)*100}%"></div></div>` +
+          `<div class="tvl">${it.qty}</div></div>`
+        ).join('')
+      : '<div class="es"><p>No data yet</p></div>';
+
+    // Recent bills
+    gv('rec-tbl').innerHTML = recentBills.length
+      ? recentBills.map(b =>
+          `<tr><td><span class="bn">#${b.id}</span></td><td>${b.name}</td>` +
+          `<td class="dc">${b.date}</td><td><span class="tc">${fmt(b.total)}</span></td>` +
+          `<td><button class="ab" onclick="openMo(${b.id})">👁</button></td></tr>`
+        ).join('')
+      : '<tr><td colspan="5"><div class="es"><p>No bills yet</p></div></td></tr>';
+
+  } catch(e) {
+    toast('Dashboard error: ' + e.message, 'err');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  HISTORY
+// ══════════════════════════════════════════════════════════════
+async function loadHistory() {
+  const loading = gv('hist-loading');
+  loading.style.display = 'flex';
+
+  const date   = gv('fd') ? gv('fd').value : '';
+  const search = gv('fn') ? gv('fn').value : '';
+  const sort   = gv('fs') ? gv('fs').value : 'newest';
+  const params = new URLSearchParams({ sort, page: curHistPage, limit: LIMIT });
+  if (date)   params.set('date', date);
+  if (search) params.set('search', search);
+
+  try {
+    const data = await GET('/api/bills?' + params);
+    histTotal = data.total;
+    renderHistTable(data.bills, search);
+    renderPagination(data.total, data.page);
+    if (gv('tbl-cnt')) gv('tbl-cnt').textContent = data.total + ' record' + (data.total !== 1 ? 's' : '');
+    gv('hist-sync').textContent = '✓ Synced';
+  } catch(e) {
+    toast('Failed to load: ' + e.message, 'err');
+    gv('hist-sync').textContent = '✗ Offline';
+  } finally {
+    loading.style.display = 'none';
+  }
+}
+
+function clearFilters() {
+  gv('fd').value = '';
+  gv('fn').value = '';
+  gv('fs').value = 'newest';
+  curHistPage = 1;
+  loadHistory();
+}
+
+function renderHistTable(bills, search) {
+  const tb = gv('bills-tbl');
+  if (!bills.length) {
+    tb.innerHTML = '<tr><td colspan="7"><div class="es"><span class="ei">📭</span><p>No records found</p><button onclick="clearFilters()">Clear Filters</button></div></td></tr>';
+    return;
+  }
+  function hl(t) {
+    if (!search) return t;
+    return String(t).replace(new RegExp('(' + search.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark class="hl">$1</mark>');
+  }
+  tb.innerHTML = bills.map(b =>
+    `<tr>
+      <td><span class="bn">#${b.id}</span></td>
+      <td><strong>${hl(b.name)}</strong></td>
+      <td><span class="pc">${b.number || '—'}</span></td>
+      <td><span class="ac">${hl(b.address || '—')}</span></td>
+      <td><span class="dc">${b.date}</span></td>
+      <td><span class="tc">${fmt(b.total)}</span></td>
+      <td style="display:flex;gap:.3rem">
+        <button class="ab" onclick="openMo(${b.id})" title="View">👁</button>
+        <button class="ab" onclick="editB(${b.id})" title="Edit">✏️</button>
+        <button class="ab dl" onclick="delB(${b.id})" title="Delete">🗑</button>
+      </td>
+    </tr>`
+  ).join('');
+}
+
+function renderPagination(total, page) {
+  const pg2 = gv('pgn');
+  const tp = Math.ceil(total / LIMIT);
+  pg2.innerHTML = '';
+  for (let i = 1; i <= tp; i++) {
+    const b = document.createElement('button');
+    b.className = 'pgb' + (i === page ? ' active' : '');
+    b.textContent = i;
+    b.onclick = () => { curHistPage = i; loadHistory(); };
+    pg2.appendChild(b);
+  }
+}
+
+async function delB(id) {
+  if (ST.confirm !== false && !confirm('Delete this bill?')) return;
+  try {
+    await DEL('/api/bills/' + id);
+    toast('Bill deleted');
+    loadHistory();
+    bldDash();
+  } catch(e) { toast('Delete failed: ' + e.message, 'err'); }
+}
+
+async function editB(id) {
+  try {
+    const data = await GET('/api/bills/' + id);
+    const b = data.bill;
+    sp('billing', qs()[2]);
+    setTimeout(() => {
+      gv('bn').value  = b.name;
+      gv('bph').value = b.number || '';
+      gv('bdt').value = b.date;
+      gv('btm').value = b.time || '';
+      gv('bad').value = b.address || '';
+      gv('bsh').value = b.shipto || '';
+      gv('bav').value = b.advance || 0;
+      gv('bdi').value = b.discount || 0;
+      gv('bnt').value = b.notes || '';
+      items = b.items.map(i => ({ ...i }));
+      rndItems();
+      updPrev();
+    }, 60);
+  } catch(e) { toast('Load failed: ' + e.message, 'err'); }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  BILLING
+// ══════════════════════════════════════════════════════════════
+async function initBill() {
+  // Load latest menu from server if not loaded
+  if (!menuItems.length) await loadMenu();
+  if (ST.autoDate !== false && !gv('bdt').value) {
+    const n = new Date();
+    gv('bdt').value = n.toISOString().split('T')[0];
+    gv('btm').value = n.toTimeString().slice(0, 5);
+  }
+  if (!items.length) addItem();
+  rndItems();
+  updPrev();
+
+  // Customer name suggestions from server
+  try {
+    const data = await GET('/api/bills?limit=500');
+    const names = [...new Set(data.bills.map(b => b.name))];
+    const dl = gv('csugg');
+    if (dl) dl.innerHTML = names.map(n => `<option value="${n}">`).join('');
+  } catch(e) {}
+}
+
+function addItem() { items.push({ desc: menuItems[0] || 'Item', qty: 1, price: 0 }); rndItems(); updPrev(); }
+function clearItems() { items = [{ desc: menuItems[0] || 'Item', qty: 1, price: 0 }]; rndItems(); updPrev(); }
+function clrForm() {
+  ['bn','bph','bad','bsh','bnt'].forEach(id => { const el = gv(id); if (el) el.value = ''; });
+  ['bav','bdi'].forEach(id => { gv(id).value = 0; });
+  items = [{ desc: menuItems[0] || 'Item', qty: 1, price: 0 }];
+  rndItems(); updPrev();
+}
+
+function rndItems() {
+  gv('ilist').innerHTML = items.map((it, i) =>
+    `<div class="ir">
+      <div class="fld">${i===0?'<label>Description</label>':''}<select onchange="items[${i}].desc=this.value;updPrev()">
+        ${menuItems.map(m => `<option${m===it.desc?' selected':''}>${m}</option>`).join('')}
+      </select></div>
+      <div class="fld">${i===0?'<label>Qty</label>':''}<input type="number" value="${it.qty}" min="1" onchange="items[${i}].qty=+this.value;rndItems();updPrev();"></div>
+      <div class="fld">${i===0?'<label>Price ₹</label>':''}<input type="number" value="${it.price}" min="0" onchange="items[${i}].price=+this.value;rndItems();updPrev();"></div>
+      <div class="fld">${i===0?'<label>Amount</label>':''}<input type="number" value="${it.qty*it.price}" readonly style="opacity:.45;cursor:default"></div>
+      <button class="ri" style="margin-top:${i===0?'1.3rem':'0'}" onclick="rmItem(${i})">✕</button>
+    </div>`
+  ).join('');
+}
+
+function rmItem(i) { items.splice(i,1); if (!items.length) items = [{desc:menuItems[0]||'Item',qty:1,price:0}]; rndItems(); updPrev(); }
+function calcSub() { return items.reduce((s,i) => s + (i.qty * i.price), 0); }
+function calcTot() {
+  const s = calcSub(), d = +(gv('bdi')?gv('bdi').value:0)||0, a = +(gv('bav')?gv('bav').value:0)||0;
+  return Math.max(0, s - d - a);
+}
+
+function updPrev() {
+  const s = calcSub(), d = +(gv('bdi')?gv('bdi').value:0)||0, a = +(gv('bav')?gv('bav').value:0)||0;
+  const tot = Math.max(0, s - d - a);
+  gv('ltv').textContent = fmt(tot);
+  if (ST.preview === false) return;
+  const nm = gv('bn')?gv('bn').value:'—', ph=gv('bph')?gv('bph').value:'—';
+  const dt = gv('bdt')?gv('bdt').value:'—', ad=gv('bad')?gv('bad').value:'—';
+  const nt = gv('bnt')?gv('bnt').value:'';
+  gv('inv-prev').innerHTML = bldInv({
+    id:'PREVIEW', name:nm, number:ph, date:dt, address:ad, notes:nt,
+    items, sub:s, disc:d, adv:a, total:tot,
+    bizName: ST.bizName||'Ashok Mess',
+    location: ST.location||'Uppiliyapuram',
+    footer: ST.footer||'Thank you for your order!'
+  });
+}
+
+document.addEventListener('input', e => {
+  if (['bn','bph','bdt','bad','bnt','bdi','bav'].includes(e.target.id)) updPrev();
+});
+
+async function saveBill() {
+  const nm = (gv('bn').value || '').trim();
+  if (!nm) { gv('bn').style.borderColor='var(--red)'; toast('Please enter customer name','err'); return; }
+  gv('bn').style.borderColor = '';
+
+  const btn = gv('save-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Saving…';
+
+  const payload = {
+    name: nm,
+    number:   gv('bph').value,
+    address:  gv('bad').value,
+    shipto:   gv('bsh').value,
+    date:     gv('bdt').value,
+    time:     gv('btm').value,
+    advance:  +(gv('bav').value) || 0,
+    discount: +(gv('bdi').value) || 0,
+    notes:    gv('bnt').value,
+    items: items.map(i => ({ desc:i.desc, qty:Number(i.qty), price:Number(i.price) }))
+  };
+
+  try {
+    const data = await POST('/api/bills', payload);
+    toast(`✔ Bill #${data.bill.id} saved to server!`);
+    if (ST.sound) { try { const ac=new AudioContext(),o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.frequency.value=880;g.gain.setValueAtTime(.3,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.3);o.start();o.stop(ac.currentTime+.3); } catch(e) {} }
+    clrForm();
+  } catch(e) {
+    toast('Save failed: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '💾 Save Bill';
+  }
+}
+
+function shareWA() {
+  const nm=gv('bn')?gv('bn').value:'Customer', tot=gv('ltv')?gv('ltv').textContent:'₹0';
+  const biz = ST.bizName || 'Ashok Mess';
+  window.open('https://wa.me/?text=*'+encodeURIComponent(biz)+'*%0AUppiliyapuram%0A%0ABill+for+*'+encodeURIComponent(nm)+'*%0ATotal:+*'+encodeURIComponent(tot)+'*%0A%0AThank+you!','_blank');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MODAL (View Bill)
+// ══════════════════════════════════════════════════════════════
+async function openMo(id) {
+  try {
+    const data = await GET('/api/bills/' + id);
+    const b = data.bill;
+    modBill = b;
+    const s = b.items.reduce((sum,i) => sum+(i.qty*i.price), 0);
+    gv('mod-cnt').innerHTML = '<h3>Bill #'+b.id+'</h3>' + bldInv({
+      ...b, sub:s, disc:b.discount||0, adv:b.advance||0,
+      bizName:ST.bizName||'Ashok Mess', location:ST.location||'Uppiliyapuram',
+      footer:ST.footer||'Thank you!'
+    });
+    gv('vmod').classList.add('open');
+  } catch(e) { toast('Cannot load bill: ' + e.message, 'err'); }
+}
+function closeMo() { gv('vmod').classList.remove('open'); modBill=null; }
+function shareModalWA() {
+  if (!modBill) return;
+  const biz = ST.bizName||'Ashok Mess';
+  window.open('https://wa.me/?text=*'+encodeURIComponent(biz)+'*%0AUppiliyapuram%0A%0ABill+%23'+modBill.id+'+for+*'+encodeURIComponent(modBill.name)+'*%0ADate:+'+modBill.date+'%0ATotal:+*'+fmt(modBill.total)+'*%0A%0AThank+you!','_blank');
+}
+gv('vmod').addEventListener('click', e => { if (e.target === gv('vmod')) closeMo(); });
+
+// Invoice builder
+function bldInv(b) {
+  return `<div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)">
+      <div>
+        <div class="ibn">${b.bizName}</div>
+        <div class="ibs">No -7, AGM Medical back side, Main Road<br>UPPILIAPURAM-621011 · 8489690007</div>
+      </div>
+      <div style="text-align:right;font-size:.75rem;color:var(--m2)">
+        <div style="font-family:Bebas Neue,cursive;font-size:1.2rem;letter-spacing:2px">#${b.id}</div>
+        <div>${b.date}</div>
+      </div>
+    </div>
+    <div class="icu">
+      <div><div class="icl">Name</div><div class="icv">${b.name}</div></div>
+      <div><div class="icl">Phone</div><div class="icv">${b.number||'—'}</div></div>
+      <div style="grid-column:span 2"><div class="icl">Address</div><div class="icv">${b.address||'—'}</div></div>
+    </div>
+    <table class="it2"><thead><tr><th>#</th><th>Item</th><th>Qty</th><th>Price</th><th style="text-align:right">Amt</th></tr></thead><tbody>
+      ${b.items.map((it,i) => `<tr><td style="color:var(--muted)">${i+1}</td><td>${it.desc}</td><td>${it.qty}</td><td>₹${it.price}</td><td style="text-align:right">₹${(it.qty*it.price).toLocaleString('en-IN')}</td></tr>`).join('')}
+    </tbody></table>
+    <div class="ito">
+      <div class="irow"><span>Subtotal</span><span>₹${Number(b.sub).toLocaleString('en-IN')}</span></div>
+      ${b.disc ? `<div class="irow"><span style="color:var(--or)">Discount</span><span style="color:var(--or)">−₹${b.disc}</span></div>` : ''}
+      ${b.adv  ? `<div class="irow"><span style="color:var(--or)">Advance</span><span style="color:var(--or)">−₹${b.adv}</span></div>` : ''}
+      <div class="irow grand"><span>Total</span><span>₹${Number(b.total).toLocaleString('en-IN')}</span></div>
+    </div>
+    ${b.notes ? `<div style="margin-top:.8rem;font-size:.78rem;color:var(--muted);padding:.6rem;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)">📝 ${b.notes}</div>` : ''}
+    <div class="ifn">${b.footer}</div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  REPORTS
+// ══════════════════════════════════════════════════════════════
+function setRange(r) {
+  const n=new Date(), f=new Date(), t=new Date();
+  if (r==='week') f.setDate(n.getDate()-7);
+  else if (r==='month') f.setDate(1);
+  else f.setFullYear(2000);
+  gv('rf').value = f.toISOString().split('T')[0];
+  gv('rt').value = t.toISOString().split('T')[0];
+  bldRpt();
+}
+
+async function bldRpt() {
+  const f=gv('rf')?gv('rf').value:'', t=gv('rt')?gv('rt').value:'';
+  const params = new URLSearchParams();
+  if (f) params.set('from', f);
+  if (t) params.set('to', t);
+  try {
+    const data = await GET('/api/reports?' + params);
+    const { summary, topCustomers, topMenuItems, dailyRevenue } = data;
+
+    gv('r-ord').textContent = summary.totalOrders;
+    gv('r-rev').textContent = fmt(summary.totalRevenue);
+    gv('r-avg').textContent = fmt(summary.avgBill);
+    gv('r-max').textContent = fmt(summary.maxBill);
+
+    const mxC = topCustomers[0]?topCustomers[0].amount:1;
+    gv('r-cust').innerHTML = topCustomers.length
+      ? topCustomers.map((x,i) =>
+          `<div class="tir"><div class="trk">${i+1}</div><div class="tnm">${x.name}</div>` +
+          `<div class="tbw"><div class="tb" style="width:${(x.amount/mxC)*100}%"></div></div>` +
+          `<div class="tvl">${fmt(x.amount)}</div></div>`
+        ).join('')
+      : '<div class="es"><p>No data</p></div>';
+
+    const mxI = topMenuItems[0]?topMenuItems[0].qty:1;
+    gv('r-menu').innerHTML = topMenuItems.length
+      ? topMenuItems.map((x,i) =>
+          `<div class="tir"><div class="trk">${i+1}</div><div class="tnm">${x.name}</div>` +
+          `<div class="tbw"><div class="tb" style="width:${(x.qty/mxI)*100}%"></div></div>` +
+          `<div class="tvl">${x.qty}</div></div>`
+        ).join('')
+      : '<div class="es"><p>No data</p></div>';
+
+    const mxD = Math.max(...dailyRevenue.map(d=>d.revenue))||1;
+    gv('r-bar').innerHTML = dailyRevenue.map(d =>
+      `<div class="bw"><div class="bv" style="font-size:.55rem">${d.revenue?'₹'+(d.revenue/1000).toFixed(0)+'k':''}</div>` +
+      `<div class="bar" style="height:${Math.max((d.revenue/mxD)*110,3)}px"></div>` +
+      `<div class="bl">${new Date(d.date).getDate()}</div></div>`
+    ).join('');
+
+    gv('r-sum').innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:.6rem;font-size:.88rem">
+        <div class="tr2"><span>Total Bills</span><strong>${summary.totalOrders}</strong></div>
+        <div class="tr2"><span>Total Revenue</span><strong style="color:var(--gold)">${fmt(summary.totalRevenue)}</strong></div>
+        <div class="tr2"><span>Average Bill</span><strong>${fmt(summary.avgBill)}</strong></div>
+        <div class="tr2"><span>Highest Bill</span><strong>${fmt(summary.maxBill)}</strong></div>
+        <div class="tr2"><span>Unique Customers</span><strong>${summary.uniqueCustomers}</strong></div>
+        <div class="tr2"><span>Menu Items Used</span><strong>${summary.menuItemsUsed}</strong></div>
+      </div>`;
+  } catch(e) { toast('Reports error: ' + e.message, 'err'); }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MENU
+// ══════════════════════════════════════════════════════════════
+async function loadMenu() {
+  try {
+    const data = await GET('/api/menu');
+    menuItems = data.menuItems;
+    if (gv('mgd')) renderMenu();
+  } catch(e) { toast('Menu load error: ' + e.message, 'err'); }
+}
+
+function renderMenu() {
+  gv('mcnt').textContent = menuItems.length;
+  gv('mgd').innerHTML = menuItems.map((m,i) =>
+    `<div class="mc"><span>${m}</span><button class="mcd" onclick="delMI('${encodeURIComponent(m)}')">✕</button></div>`
+  ).join('');
+}
+
+async function addMI() {
+  const v = (gv('nmi').value||'').trim();
+  if (!v) { toast('Enter item name','err'); return; }
+  try {
+    const data = await POST('/api/menu', { name: v });
+    menuItems = data.menuItems;
+    renderMenu();
+    gv('nmi').value = '';
+    toast('Added: ' + v);
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+async function delMI(encodedName) {
+  const name = decodeURIComponent(encodedName);
+  if (!confirm(`Remove "${name}"?`)) return;
+  try {
+    const data = await DEL('/api/menu/' + encodedName);
+    menuItems = data.menuItems;
+    renderMenu();
+    toast('Removed: ' + name);
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  SETTINGS
+// ══════════════════════════════════════════════════════════════
+async function loadSettings() {
+  try {
+    const data = await GET('/api/settings');
+    ST = data.settings;
+    applySettingsToForm();
+    // bill count
+    const h = await GET('/api/health');
+    if (gv('abt')) gv('abt').textContent = h.bills;
+    if (gv('srv-status')) gv('srv-status').textContent = '✅ Online — ' + h.bills + ' bills in database';
+  } catch(e) {
+    if (gv('srv-status')) gv('srv-status').textContent = '❌ Offline';
+  }
+}
+
+function applySettingsToForm() {
+  const m = { 's-biz': ST.bizName||'Ashok Mess', 's-loc': ST.location||'Uppiliyapuram', 's-phn': ST.phone||'', 's-ftr': ST.footer||'Thank you for your order!' };
+  Object.entries(m).forEach(([k,v]) => { const el=gv(k); if(el) el.value=v; });
+  const ch = { 's-ad': ST.autoDate!==false, 's-pv': ST.preview!==false, 's-cf': ST.confirm!==false, 's-sn': ST.sound||false };
+  Object.entries(ch).forEach(([k,v]) => { const el=gv(k); if(el) el.checked=v; });
+}
+
+let stTimer;
+function saveSt() {
+  clearTimeout(stTimer);
+  stTimer = setTimeout(async () => {
+    ST = {
+      bizName:  gv('s-biz')?gv('s-biz').value:'Ashok Mess',
+      location: gv('s-loc')?gv('s-loc').value:'Uppiliyapuram',
+      phone:    gv('s-phn')?gv('s-phn').value:'',
+      footer:   gv('s-ftr')?gv('s-ftr').value:'Thank you for your order!',
+      autoDate: gv('s-ad')?gv('s-ad').checked:true,
+      preview:  gv('s-pv')?gv('s-pv').checked:true,
+      confirm:  gv('s-cf')?gv('s-cf').checked:true,
+      sound:    gv('s-sn')?gv('s-sn').checked:false
+    };
+    try {
+      await PUT('/api/settings', ST);
+      toast('Settings saved to server ✓');
+    } catch(e) { toast('Settings save failed','err'); }
+  }, 800);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  BACKUP / RESTORE / CLEAR
+// ══════════════════════════════════════════════════════════════
+async function backup() {
+  try {
+    const data = await GET('/api/backup');
+    const a = document.createElement('a');
+    a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data.backup, null, 2));
+    a.download = 'ashok_backup_' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    toast('Backup downloaded!');
+  } catch(e) { toast('Backup failed','err'); }
+}
+
+async function restore(inp) {
+  const file = inp.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = async e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      await POST('/api/restore', d);
+      toast('Restored! ' + (d.bills||[]).length + ' bills.');
+      if (d.menuItems) { menuItems = d.menuItems; }
+      bldDash();
+    } catch(ex) { toast('Invalid backup file','err'); }
+  };
+  r.readAsText(file);
+  inp.value = '';
+}
+
+async function clearAll() {
+  if (!confirm('Delete ALL bills from server? This cannot be undone!')) return;
+  try {
+    await DEL('/api/data');
+    toast('All bills cleared from server');
+    bldDash();
+  } catch(e) { toast('Clear failed','err'); }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  INIT — called on page load
+// ══════════════════════════════════════════════════════════════
+async function init() {
+  // Set report date range to this month
+  const n = new Date();
+  if (gv('rf')) gv('rf').value = new Date(n.getFullYear(), n.getMonth(), 1).toISOString().split('T')[0];
+  if (gv('rt')) gv('rt').value = n.toISOString().split('T')[0];
+
+  // Load settings + menu from server
+  try {
+    const [sData, mData] = await Promise.all([GET('/api/settings'), GET('/api/menu')]);
+    ST = sData.settings;
+    menuItems = mData.menuItems;
+  } catch(e) {
+    setStatus('offline');
+    toast('⚠ Cannot reach server. Check if node server.js is running.', 'err');
+  }
+
+  // Load dashboard
+  bldDash();
+}
+
+init();
+</script>
+</body>
+</html>
