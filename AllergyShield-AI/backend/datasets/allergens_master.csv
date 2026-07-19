@@ -1,0 +1,26 @@
+ingredient,allergen,category,severity,description
+milk,Milk,Dairy,High,Contains milk proteins that can trigger allergic reactions.
+milk powder,Milk,Dairy,High,Dried milk containing allergenic milk proteins.
+whey,Milk,Dairy,High,Whey is a milk protein that may cause allergic reactions.
+casein,Milk,Dairy,High,Casein is the primary protein found in milk and is a common allergen.
+paneer,Milk,Dairy,High,Paneer is a dairy product made from milk and contains milk proteins.
+ghee,Milk,Dairy,Medium,Ghee contains very low milk proteins but may still affect highly sensitive individuals.
+soy,Soy,Soy Product,High,Soy proteins can trigger allergic reactions in people with soy allergy.
+soy lecithin,Soy,Emulsifier,Medium,Soy lecithin is an emulsifier usually derived from soy and may affect sensitive individuals.
+soy protein,Soy,Soy Product,High,Soy protein is a concentrated soy ingredient that can cause allergic reactions.
+wheat,Wheat,Grain,High,Wheat contains proteins that may trigger wheat allergies.
+wheat flour,Gluten,Grain,High,Wheat flour contains gluten which is unsafe for people with gluten-related disorders.
+maida,Gluten,Grain,High,Maida is refined wheat flour and contains gluten.
+atta,Gluten,Grain,High,Atta is whole wheat flour and naturally contains gluten.
+suji,Gluten,Grain,High,Suji or semolina is made from wheat and contains gluten.
+rava,Gluten,Grain,High,Rava is derived from wheat and contains gluten.
+egg,Egg,Poultry,High,Egg proteins can cause allergic reactions in sensitive individuals.
+peanut,Peanut,Nut,High,Peanuts are one of the most common causes of severe food allergies.
+groundnut,Peanut,Nut,High,Groundnut is another name for peanut and can trigger severe allergic reactions.
+almond,Tree Nuts,Nut,High,Almond is a tree nut that may cause allergic reactions.
+cashew,Tree Nuts,Nut,High,Cashew is a tree nut that can trigger allergic reactions.
+sesame,Sesame,Seed,High,Sesame seeds are a common food allergen and may cause severe reactions.
+fish,Fish,Seafood,High,Fish proteins can cause allergic reactions even after cooking.
+shrimp,Shellfish,Seafood,High,Shrimp is a shellfish that commonly causes severe allergic reactions.
+sugar,None,Sweetener,Safe,Sugar is generally considered safe and is not a common food allergen.
+salt,None,Mineral,Safe,Salt is generally safe and is not associated with food allergies.
